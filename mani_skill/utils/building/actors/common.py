@@ -345,8 +345,13 @@ def build_glb_obj(
         _type_: _description_
     """
     builder = scene.create_actor_builder()
+    builder.set_mass_and_inertia(
+        mass=0.1,
+        cmass_local_pose=sapien.Pose([0,0,0]),
+        inertia=[0,0,0], 
+    )
     if add_collision:
-        builder.add_nonconvex_collision_from_file(filename=glb_path, scale=(half_size, half_size, half_size),desity=0.0001)
+        builder.add_nonconvex_collision_from_file(filename=glb_path, scale=(half_size, half_size, half_size),desity=0.01)
     builder.add_visual_from_file(filename=glb_path,scale=(half_size, half_size, half_size),#q=[0.5, 0.5, 0.5, 0.5]
-                                 pose=sapien.Pose(p=[0, 0, 0],  q=[1, 0,0,0]))
+                                 pose=sapien.Pose(p=[0, 0, 0], q=[0.5, 0.5, 0.5, 0.5]))
     return _build_by_type(builder, name, body_type, scene_idxs, initial_pose)

@@ -67,12 +67,14 @@ class PickBananaEnv(BaseEnv):
         self.banana = actors.build_glb_obj(
             self.scene,
             #glb_path="/mnt/data/liy/projects/maniskill_project/liy_branch/ManiSkill/mani_skill/utils/building/actors/assets/banana/7193-纹理.glb",
-            glb_path="/mnt/data/liy/projects/maniskill_project/liy_branch/ManiSkill/mani_skill/utils/building/actors/assets/desk/fuzi.glb",
+            #glb_path="/mnt/data/liy/projects/maniskill_project/liy_branch/ManiSkill/mani_skill/utils/building/actors/assets/desk/fuzi.glb",
+            #glb_path=   "/mnt/data/liy/projects/maniskill_project/liy_branch/ManiSkill/mani_skill/utils/building/actors/assets/desk/bowl.glb",
+            glb_path="/mnt/data/liy/projects/maniskill_project/liy_branch/ManiSkill/mani_skill/utils/building/actors/assets/bowl/shoes.glb",
             half_size=0.1,
             name="banana",
             body_type="dynamic",
             add_collision=True,
-            initial_pose=sapien.Pose(p=[0, 0.25, self.cube_half_size], q=[0.707, 0, 0, 0.707]))
+            initial_pose=sapien.Pose(p=[0, 0, 0], q=[0.707, 0, 0, 0.707]))
         
         # self.pack = actors.build_glb_obj(
         #     self.scene,
