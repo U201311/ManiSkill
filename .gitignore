@@ -3,6 +3,9 @@ __pycache__
 _ext
 *.pyc
 *.so
+*.glb
+*.dae
+*.obj
 build/
 dist/
 *.egg-info/

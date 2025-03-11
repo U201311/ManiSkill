@@ -317,3 +317,36 @@ def build_colorful_cube(
         ),
     )
     return _build_by_type(builder, name, body_type, scene_idxs, initial_pose)
+
+
+def build_glb_obj(
+    scene: ManiSkillScene,
+    glb_path: str,
+    half_size: float,
+    name: str,
+    body_type: str = "dynamic",
+    add_collision: bool = True,
+    scene_idxs: Optional[Array] = None,
+    initial_pose: Optional[Union[Pose, sapien.Pose]] = None,
+):
+    """从glb文件中加载资产
+
+    Args:
+        scene (ManiSkillScene): _description_
+        glb_path (str): _description_
+        half_size (float): _description_
+        name (str): _description_
+        body_type (str, optional): _description_. Defaults to "dynamic".
+        add_collision (bool, optional): _description_. Defaults to True.
+        scene_idxs (Optional[Array], optional): _description_. Defaults to None.
+        initial_pose (Optional[Union[Pose, sapien.Pose]], optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
+    builder = scene.create_actor_builder()
+    if add_collision:
+        builder.add_nonconvex_collision_from_file(filename=glb_path, scale=(half_size, half_size, half_size),desity=0.0001)
+    builder.add_visual_from_file(filename=glb_path,scale=(half_size, half_size, half_size),#q=[0.5, 0.5, 0.5, 0.5]
+                                 pose=sapien.Pose(p=[0, 0, 0],  q=[1, 0,0,0]))
+    return _build_by_type(builder, name, body_type, scene_idxs, initial_pose)

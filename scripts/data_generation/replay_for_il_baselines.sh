@@ -15,7 +15,7 @@ python -m mani_skill.trajectory.replay_trajectory \
   --save-traj --num-envs 10 -b physx_cpu
 
 python -m mani_skill.trajectory.replay_trajectory \
-  --traj-path ~/.maniskill/demos/PickCube-v1/motionplanning/trajectory.h5 \
+  --traj-path /mnt/data/liy/projects/maniskill_project/liy_branch/ManiSkill/demos/PickCube-v1/motionplanning/20250307_212732.h5 \
   --use-first-env-state -c pd_ee_delta_pos -o state \
   --save-traj --num-envs 10 -b physx_cpu
 
