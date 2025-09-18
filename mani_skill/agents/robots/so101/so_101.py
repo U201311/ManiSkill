@@ -1,24 +1,25 @@
 import copy
-
 import numpy as np
 import sapien
-import sapien.render
 import torch
 from transforms3d.euler import euler2quat
 
 from mani_skill import PACKAGE_ASSET_DIR
 from mani_skill.agents.base_agent import BaseAgent, Keyframe
-from mani_skill.agents.controllers import *
+from mani_skill.agents.controllers import * 
 from mani_skill.agents.registration import register_agent
+
 from mani_skill.utils import common
 from mani_skill.utils.structs.actor import Actor
 from mani_skill.utils.structs.pose import Pose
 
 
+
+
 @register_agent()
-class SO100(BaseAgent):
-    uid = "so100"
-    urdf_path = f"{PACKAGE_ASSET_DIR}/robots/so100/so100.urdf"
+class SO101(BaseAgent):
+    uid = "so101"
+    urdf_path = f"{PACKAGE_ASSET_DIR}/robots/SO101/so101_new_calib.urdf"
     urdf_config = dict(
         _materials=dict(
             gripper=dict(static_friction=2, dynamic_friction=2, restitution=0.0)
@@ -26,20 +27,20 @@ class SO100(BaseAgent):
         link=dict(
             Fixed_Jaw=dict(material="gripper", patch_radius=0.1, min_patch_radius=0.1),
             Moving_Jaw=dict(material="gripper", patch_radius=0.1, min_patch_radius=0.1),
-        ),
+        ),     
     )
-
+    
     keyframes = dict(
         rest=Keyframe(
-            qpos=np.array([0, -1.5708, 1.5708, 0.66, 0, -1.1]),
-            pose=sapien.Pose(q=euler2quat(0, 0, np.pi / 2)),
+            qpos=np.array([0, 0, 0, 0, 0, 0.04868]),
+            pose=sapien.Pose(q=euler2quat(np.pi / 2, 0, np.pi / 2)),
         ),
         zero=Keyframe(
             qpos=np.array([0.0] * 6),
-            pose=sapien.Pose(q=euler2quat(0, 0, np.pi / 2)),
+            pose=sapien.Pose(q=euler2quat(np.pi / 2, 0, np.pi / 2)),
         ),
     )
-
+    
     arm_joint_names = [
         "shoulder_pan",
         "shoulder_lift",
@@ -47,9 +48,11 @@ class SO100(BaseAgent):
         "wrist_flex",
         "wrist_roll",
     ]
+    
     gripper_joint_names = [
         "gripper",
     ]
+
 
     @property
     def _controller_configs(self):
@@ -85,7 +88,7 @@ class SO100(BaseAgent):
             pd_joint_target_delta_pos=pd_joint_target_delta_pos,
         )
         return deepcopy_dict(controller_configs)
-
+    
     @property
     def tcp_pos(self):
         # computes the tool center point as the mid point between the the fixed and moving jaw's tips
@@ -95,12 +98,13 @@ class SO100(BaseAgent):
     def tcp_pose(self):
         return Pose.create_from_pq(self.tcp_pos, self.finger1_link.pose.q)
 
+
     def _after_loading_articulation(self):
         super()._after_loading_articulation()
-        self.finger1_link = self.robot.links_map["Fixed_Jaw"]
-        self.finger2_link = self.robot.links_map["Moving_Jaw"]
-        self.finger1_tip = self.robot.links_map["Fixed_Jaw_tip"]
-        self.finger2_tip = self.robot.links_map["Moving_Jaw_tip"]
+        self.finger1_link = self.robot.links_map["gripper_link"]
+        self.finger2_link = self.robot.links_map["moving_jaw_so101_v1_link"]
+        self.finger1_tip = self.robot.links_map["gripper_link"]
+        self.finger2_tip = self.robot.links_map["moving_jaw_so101_v1_link"]
 
     def is_grasping(self, object: Actor, min_force=0.5, max_angle=110):
         """Check if the robot is grasping an object
@@ -131,7 +135,8 @@ class SO100(BaseAgent):
             rforce >= min_force, torch.rad2deg(rangle) <= max_angle
         )
         return torch.logical_and(lflag, rflag)
-
+    
+    
     def is_static(self, threshold=0.2):
         qvel = self.robot.get_qvel()[:, :-1]  # exclude the gripper joint
         return torch.max(torch.abs(qvel), 1)[0] <= threshold
@@ -147,3 +152,5 @@ class SO100(BaseAgent):
         T[:3, :3] = np.stack([ortho, closing, approaching], axis=1)
         T[:3, 3] = center
         return sapien.Pose(T)
+
+    

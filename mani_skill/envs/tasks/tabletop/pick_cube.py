@@ -5,7 +5,7 @@ import sapien
 import torch
 
 import mani_skill.envs.utils.randomization as randomization
-from mani_skill.agents.robots import SO100, Fetch, Panda, WidowXAI, XArm6Robotiq
+from mani_skill.agents.robots import SO100, Fetch, Panda, WidowXAI, XArm6Robotiq, SO101
 from mani_skill.envs.sapien_env import BaseEnv
 from mani_skill.envs.tasks.tabletop.pick_cube_cfgs import PICK_CUBE_CONFIGS
 from mani_skill.sensors.camera import CameraConfig
@@ -39,14 +39,15 @@ class PickCubeEnv(BaseEnv):
         "fetch",
         "xarm6_robotiq",
         "so100",
+        "so101",
         "widowxai",
     ]
-    agent: Union[Panda, Fetch, XArm6Robotiq, SO100, WidowXAI]
+    agent: Union[Panda, Fetch, XArm6Robotiq, SO100, SO101, WidowXAI]
     goal_thresh = 0.025
     cube_spawn_half_size = 0.05
     cube_spawn_center = (0, 0)
 
-    def __init__(self, *args, robot_uids="panda", robot_init_qpos_noise=0.02, **kwargs):
+    def __init__(self, *args, robot_uids="so100", robot_init_qpos_noise=0.02, **kwargs):
         self.robot_init_qpos_noise = robot_init_qpos_noise
         if robot_uids in PICK_CUBE_CONFIGS:
             cfg = PICK_CUBE_CONFIGS[robot_uids]
